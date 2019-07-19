@@ -1,0 +1,34 @@
+{% extends 'home.html' %}
+
+{% block title %}User Data{% endblock %}
+
+{% block navigation %}
+    <div class='navigation'>
+        <div class='active'><a href='{{url_for("userData")}}'>User Data</a></div>
+        <div><a href='{{url_for("home")}}'>Choose your Food!</a></div>
+        <div><a href='{{url_for("recommended")}}'>Recommended</a></div>
+     </div>
+{% endblock %}
+
+{% block content %}
+    {% if flag is  undefined %}
+        <div class='udContainer'>
+            <table>
+                <thead>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Ingredients</th>
+                </thead>
+                {% for row in rows %}
+                <tr>
+                    <td>{{row['Iid']}}</td>
+                    <td>{{row['title']}}</td>
+                    <td>{{row['ingredients']}}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    {% else %}
+        <div id='noFood'>You haven't chosen any food yet. Go pick one!</div>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'home.html' %}
+
+{% block title %}Choose your Food{% endblock %}
+
+{% block navigation %}
+    <div class='navigation'>
+            <div><a href='{{url_for("userData")}}'>User Data</a></div>
+            <div class='active'><a href='{{url_for("home")}}'>Choose your Food!</a></div>
+            <div><a href='{{url_for("recommended")}}'>Recommended</a></div>
+     </div>
+{% endblock %}
+
+{% block content %}
+    <div class='mainObject'>
+            {% for row in items %}
+            <div id='grid-parent{{row["id"]}}'>
+                <meta id='my-data{{row["id"]}}' data-href="{{row['href']}}" data-thumbnail="{{row['thumbnail']}}" data-title="{{row['title']}}" data-ingredients="{{row['ingredients']}}">
+                <button class='button' id='button{{row["id"]}}'><i class='fas fa-angle-double-right' style='font-size:18px'></i></button>
+                <div class='grid-item' id='{{row["id"]}}'>
+                    <img src='{{row["thumbnail"]}}'>
+                    <div id='title{{row["id"]}}'>{{row["title"]}}</div>
+                </div>
+            </div>
+            {% endfor %}
+    </div>
+{% endblock %}

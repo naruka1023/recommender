@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+   <head>
+         <title>{% block title %}{% endblock %}</title>
+         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename = 'styles.css') }}">
+         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+      </head>
+   <body style='background-color:lightblue'>
+      <div style='margin:0px 30px; display:inline-flex; width:94vw; justify-content:space-between; padding:20px 0px'>
+         <div class='logout'><a href='{{ url_for("logout") }}'>Logout</a></div>
+         <div style='text-align:right; font-size:1.5em'>Welcome back! {{ user }}</div>
+      </div>
+      <div class='mainContainer'>
+         {% block navigation %}{% endblock %}
+         {% block content %}{% endblock %}
+      </div>
+      
+      <div class='notification'>fdsasdf</div>
+
+      <!-- Modal -->
+      <div class="modal fade" id="myModal" role="dialog">
+         <div class="modal-dialog">
+         
+         <!-- Modal content-->
+         <div class="modal-content">
+            <div class="modal-header">
+               <button type="button" class="close" data-dismiss="modal">&times;</button>
+               <h4 style='text-align:center' class="modal-title">Modal Header</h4>
+            </div>
+            <div class="modal-body" style='overflow-y:scroll; height:70vh'>
+               <img style='display:block; padding:20px; width:13em; margin:auto' src=''>
+               <p style='text-align:right'>Some text in the modal.</p>
+               <br>
+               <h3 style='padding-left:30px'>Related Foods:</h3>
+               <div id='relatedFood' style='min-height:5vw; border-radius:50px; color:aquamarine'>
+                  
+               </div>
+            </div>
+            <div class="modal-footer">
+               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+         </div>
+         
+         </div>
+      </div>
+
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+      <script src="{{ url_for('static', filename='js/sijax/sijax.js') }}"></script>
+      <script src="{{ url_for('static', filename='js/sijax/json2.js') }}"></script>
+      <script>{{ g.sijax.get_js()|safe }}</script>
+      <script>
+         $('.grid-item').each(function(){
+            $(this).click(function(){
+               Sijax.request("userChoose", [$(this).attr("id")]);
+               id = "#grid-parent" + $(this).attr("id");
+               title = "#title" + $(this).attr("id");
+               $(id).animate({opacity:0}).css('pointer-events', 'none')
+               $('.notification').animate({opacity:100}).html('You chose ' + $(title).html())
+               setTimeout(function(){ $('.notification').animate({opacity:0}); }, 1000);
+            });
+         });
+         $('.button').each(function(){
+            $(this).click(function(){
+               buttonID = $(this).attr('id').replace('button', '');
+               rawData = {
+                  'title': $('#my-data' + buttonID).data('title'),
+                  'href': $('#my-data' + buttonID).data('href'),
+                  'thumbnail': $('#my-data' + buttonID).data('thumbnail'),
+                  'ingredients': $('#my-data' + buttonID).data('ingredients'),
+               }
+               $('.modal-title').html(rawData.title);
+               $(".modal-body img").attr("src", rawData.thumbnail);
+               $('.modal-body p').html(rawData.ingredients + '<br>' + '<a href=' + rawData.href + '>More details here</a>')
+               $.ajax({
+                     url: 'http://127.0.0.1:5000/getFoodRecommendations?title=' + rawData.title,
+                     type: "GET",
+                     dataType: "json",
+                     "headers": {
+                        "accept": "application/json",
+                        "Access-Control-Allow-Origin":"*"
+                     },
+                     success: function (response) {
+                        $('#relatedFood').html(response)
+                     },
+                     error: function (xhr, status) {
+                        alert("error");
+                     }
+               });
+               $("#myModal").modal();
+            });
+         });
+      </script>
+   </body>
+</html>
