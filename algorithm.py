@@ -1,6 +1,7 @@
 from flask import Flask, request, g
 import sqlite3 as sql
 import pandas as pd
+import json
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
@@ -29,7 +30,7 @@ def buildAlgorithm():
             s = cosine_sim
             t = df
             return 'algorithm created!'
-    #     if request.args['flag'] == 'userPicks':
+    #     elif request.args['flag'] == 'userPicks':
     # else:
     return 'error 404'
 
@@ -48,7 +49,17 @@ def getFoodRecommendations():
         sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
         sim_scores = sim_scores[1:21]
         food_indices = [i[0] for i in sim_scores]
-        return titles.iloc[food_indices].drop_duplicates().to_json()
+        result = titles.iloc[food_indices].drop_duplicates()[0:10].values
+        for i in range(len(result)):
+            result[i] = '\"' + result[i] + '\"'
+        result = ",".join(result)
+        con = sql.connect("eComDB.db")
+        cur = con.cursor()
+        cur.execute("SELECT title, ingredients, thumbnail FROM items where title in (" + result + ')')
+        rows = cur.fetchall()
+        final_result = json.dumps(rows)
+        con.close()
+        return final_result
     else:
         return 'please include title'
 

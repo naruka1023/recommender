@@ -11,6 +11,9 @@
     width: 100%;
     padding: 21px 0;
 }
+.relatedRow td{
+    padding:15px 0;
+}
 .navigation div{
     cursor:pointer
 }

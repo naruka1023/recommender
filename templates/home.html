@@ -82,7 +82,16 @@
                         "Access-Control-Allow-Origin":"*"
                      },
                      success: function (response) {
-                        $('#relatedFood').html(response)
+                        rFhtml = '<table style="color:black"><thead><th>Thumbnail</th><th>Title</th><th>Ingredients</th></thead>';
+                        response.forEach(function(item){
+                              rFhtml += '<tr class="relatedRow">';
+                              rFhtml += '<td><img src="' + item[2] + '"></img></td>';
+                              rFhtml += '<td>' + item[0] + '</td>';
+                              rFhtml += '<td>' + item[1] + '</td>';
+                              rFhtml += '</tr>';
+                        })
+                        rFhtml += '</table>'
+                        $('#relatedFood').html(rFhtml)
                      },
                      error: function (xhr, status) {
                         alert("error");
