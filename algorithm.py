@@ -24,7 +24,7 @@ def buildAlgorithm():
             df = pd.DataFrame(rows, columns=['name', 'ingredients'])
             df['ingredients'] = df['ingredients'].str.split(',')
             df['ingredients'] = df['ingredients'].astype('str')
-            tf = TfidfVectorizer(analyzer='word',ngram_range=(1,2),min_df=0, use_idf=True,stop_words='english')
+            tf = TfidfVectorizer(analyzer='word',ngram_range=(1,3),min_df=0, use_idf=True,stop_words='english')
             tfidf_matrix = tf.fit_transform(df['ingredients']) 
             cosine_sim = cosine_similarity(tfidf_matrix, tfidf_matrix)
             s = cosine_sim

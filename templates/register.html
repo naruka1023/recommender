@@ -1,0 +1,30 @@
+{% extends 'credentials.html' %}
+
+{% block title %}
+    Registeration
+{% endblock %}
+
+{% block content %}
+<div class='loginForm'>
+   <div id='exist' style='display:none; color:red'>Username already exists</div>
+      <h4 style='margin:0px'>Register</h4>
+      <br>
+
+      <form class="form-signin" name='registration'>
+         <label for="inputName" class="sr-only">Username</label>
+         <br><input type="name" name="inputName" id="inputName" class="form-control" placeholder="Username" required autofocus>
+         <br><br> <label for="inputEmail" class="sr-only">Email address</label>
+         <br><input type="email" name="inputEmail" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+         <br><br> <label for="inputPassword" class="sr-only">Password</label>
+         <br><input type="password" name="inputPassword" id="inputPassword" class="form-control" placeholder="Password" required>         
+         <br><br> <label for="confirmPassword" class="sr-only">Confirm Password</label>
+         <br><input type="password" name="confirmPassword" id="confirmPassword" class="form-control" placeholder="Enter Password Again" required>
+         <br><br>
+         <button id="btn3SignUp" class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
+       </form>
+      <div style='text-align:right'><a href='{{url_for("login")}}'>Login</a></div>
+      {% if error %}
+         <p class="error"><strong>Error:</strong>{{error}}</p>
+      {% endif %}      
+   </div>
+{% endblock %}
